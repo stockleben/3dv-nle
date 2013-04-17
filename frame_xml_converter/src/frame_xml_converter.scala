@@ -21,15 +21,20 @@ object frame_xml_converter extends App {
       // TODO right now bounding boxes are not removed on empty frames
       var frame_no = file.getName().substring(0, 5)
       if (Integer.parseInt(frame_no) % 2 == 0) {
-      if (frame_no.startsWith("0")) frame_no = frame_no.substring(1,5)
-      //println(frame_no);
-      val data = XML.loadFile(file);
-      data.child.foreach { box =>
-        if (box.label.equalsIgnoreCase("boundingbox")) {
-          frameList += makeFrame(frame_no, box);
-          //println("label:" + box.label);
+        if (frame_no.startsWith("0")) frame_no = frame_no.substring(1, 5)
+        //println(frame_no);
+        val data = XML.loadFile(file);
+        var hasBox = false;
+        data.child.foreach { box =>
+          if (box.label.equalsIgnoreCase("boundingbox")) {
+            frameList += makeFrame(frame_no, box);
+            //println("label:" + box.label);
+            hasBox = true;
+          }
         }
-      }
+        if (hasBox == false) {
+            frameList += makeFrame(frame_no, null);
+          }
       }
     } // close files.foreach
     var frames = Elem(null, "frames", scala.xml.Null, scala.xml.TopScope, frameList.toList: _*);
