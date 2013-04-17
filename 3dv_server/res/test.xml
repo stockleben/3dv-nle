@@ -5,7 +5,7 @@
 		<link object="2" dest="http://Buch2.org"></link>
 		<link object="3" dest="http://Buch3.org"></link>
 	</links>
-	<frames>
+<frames>
   <frame id="2348">
     <BoundingBox id="1">
       <Min Y="39" X="343"/>
@@ -54,6 +54,11 @@
       <Max Y="465" X="418"/>
     </BoundingBox>
   </frame>
+  <frame id="2364"></frame>
+  <frame id="2366"></frame>
+  <frame id="2368"></frame>
+  <frame id="2370"></frame>
+  <frame id="2372"></frame>
   <frame id="2374">
     <BoundingBox id="2">
       <Min Y="112" X="638"/>
@@ -156,6 +161,10 @@
       <Max Y="417" X="324"/>
     </BoundingBox>
   </frame>
+  <frame id="2408"></frame>
+  <frame id="2410"></frame>
+  <frame id="2412"></frame>
+  <frame id="2414"></frame>
   <frame id="2416">
     <BoundingBox id="3">
       <Min Y="108" X="692"/>
@@ -258,6 +267,8 @@
       <Max Y="407" X="345"/>
     </BoundingBox>
   </frame>
+  <frame id="2450"></frame>
+  <frame id="2452"></frame>
   <frame id="2454">
     <BoundingBox id="1">
       <Min Y="77" X="747"/>
@@ -372,6 +383,9 @@
       <Max Y="454" X="349"/>
     </BoundingBox>
   </frame>
+  <frame id="2492"></frame>
+  <frame id="2494"></frame>
+  <frame id="2496"></frame>
   <frame id="2498">
     <BoundingBox id="2">
       <Min Y="124" X="706"/>
@@ -480,6 +494,9 @@
       <Max Y="413" X="325"/>
     </BoundingBox>
   </frame>
+  <frame id="2534"></frame>
+  <frame id="2536"></frame>
+  <frame id="2538"></frame>
   <frame id="2540">
     <BoundingBox id="3">
       <Min Y="126" X="784"/>
@@ -594,6 +611,7 @@
       <Max Y="398" X="303"/>
     </BoundingBox>
   </frame>
+  <frame id="2578"></frame>
   <frame id="2580">
     <BoundingBox id="1">
       <Min Y="92" X="744"/>
@@ -714,6 +732,7 @@
       <Max Y="449" X="300"/>
     </BoundingBox>
   </frame>
+  <frame id="2620"></frame>
   <frame id="2622">
     <BoundingBox id="2">
       <Min Y="143" X="733"/>
@@ -828,6 +847,9 @@
       <Max Y="412" X="329"/>
     </BoundingBox>
   </frame>
+  <frame id="2660"></frame>
+  <frame id="2662"></frame>
+  <frame id="2664"></frame>
   <frame id="2666">
     <BoundingBox id="3">
       <Min Y="127" X="782"/>
@@ -936,6 +958,8 @@
       <Max Y="397" X="343"/>
     </BoundingBox>
   </frame>
+  <frame id="2702"></frame>
+  <frame id="2704"></frame>
   <frame id="2706">
     <BoundingBox id="1">
       <Min Y="89" X="737"/>
@@ -1056,6 +1080,7 @@
       <Max Y="449" X="305"/>
     </BoundingBox>
   </frame>
+  <frame id="2746"></frame>
   <frame id="2748">
     <BoundingBox id="2">
       <Min Y="138" X="733"/>
