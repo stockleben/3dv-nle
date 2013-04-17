@@ -9,23 +9,25 @@
 	<script src="js/popcorn-complete.js"></script>
 	<script defer src="js/3dvivant_nle.js"></script>
 	<div id="videopane" style="position: absolute; top: 0px; left: 0px">
-		<video height="720" width="1280" id="video" controls>
+		<video height="540" width="960" id="video" controls>
 			<source src="res/quergelesen.m4v"></source>
 			<source src="res/quergelesen.ogv"></source>
 		</video>
 	</div>
 	<div id="canvas_div" style="position: absolute; top: 0px; left: 0px">
-		<canvas id="linkcanvas" width="1280" height="680" />
+		<canvas id="linkcanvas" width="960" height="500" />
 	</div>
-	<div id="overlay" style="position: absolute; top: 0px; left: 0px">
+	<!-- div id="overlay" style="position: absolute; top: 0px; left: 0px">
 		<img src="res/overlay.png" width="1280" height="680" border="0"
 			alt="" usemap="#linkmap">
 		<map name="linkmap" id="linkmap">
 			<area shape="rect" coords="11,10,59,29" href="http://www.koblenz.de/"
 				alt="Koblenz" title="Koblenz">
 		</map>
-	</div>
+	</div -->
 
-	<div id="timeline" style="position: absolute; top: 0px; left: 1280px"></div>
+	<div id="timeline" style="position: absolute; top: 0px; left: 960px"></div>
+	<div id="position" style="position: absolute; top: 40px; left: 960px"></div>
+	<div id="markers" style="position: absolute; top: 80px; left:960px; width:200px; height:400px; background-color:#DDFFCC">Drop links here to store them for later!</div>
 </body>
 </html>

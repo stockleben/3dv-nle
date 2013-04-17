@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<property name="HTDOCS" value="H:\xampp_1.8.1\xampp\htdocs\3dv"/>
+	
+    <target name="clean">
+        <delete dir="${HTDOCS}/js"/>
+        <delete dir="${HTDOCS}/css"/>
+        <delete dir="${HTDOCS}/res"/>
+    </target>
+
+	<target name="copy">
+		<copydir src="./js" dest="${HTDOCS}/js" includes="**/*.*" />
+		<copydir src="./css" dest="${HTDOCS}/css" includes="**/*.*" />
+		<copydir src="./res" dest="${HTDOCS}/res" includes="**/*.*" />
+		<copydir src="." dest="${HTDOCS}" includes = "**/*.html" />
+	</target>
+
+</project>
