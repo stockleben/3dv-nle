@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>3D-Vivant</title>
+</head>
+<body>
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/popcorn-complete.js"></script>
+	<script defer src="js/3dvivant_nle.js"></script>
+	<div id="videopane" style="position: absolute; top: 0px; left: 0px">
+		<video height="720" width="1280" id="video" controls>
+			<source src="res/quergelesen.m4v"></source>
+			<source src="res/quergelesen.ogv"></source>
+		</video>
+	</div>
+	<div id="canvas_div" style="position: absolute; top: 0px; left: 0px">
+		<canvas id="linkcanvas" width="1280" height="680" />
+	</div>
+	<div id="overlay" style="position: absolute; top: 0px; left: 0px">
+		<img src="res/overlay.png" width="1280" height="680" border="0"
+			alt="" usemap="#linkmap">
+		<map name="linkmap" id="linkmap">
+			<area shape="rect" coords="11,10,59,29" href="http://www.koblenz.de/"
+				alt="Koblenz" title="Koblenz">
+		</map>
+	</div>
+
+	<div id="timeline" style="position: absolute; top: 0px; left: 1280px"></div>
+</body>
+</html>

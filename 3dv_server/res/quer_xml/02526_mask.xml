@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<XML_data>
+   <BoundingBox id="2">
+      <Min X="234" Y="101"/>
+      <Max X="433" Y="437"/>
+   </BoundingBox>
+</XML_data>
