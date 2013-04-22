@@ -29,9 +29,12 @@ $(document).ready(
 						if (box != null){
 						var action = box.isInside(e.pageX, e.pageY);
 						document.getSelection().removeAllRanges();
+						/*
 						$('#position').html(
 								e.pageX + ', ' + e.pageY + "isInside:" + action
 										+ "<br/>" + box.toString());
+						*/
+						
 						if (action) {
 							dragging_box = box.getCopy();
 							dragging = true;
@@ -56,10 +59,10 @@ $(document).ready(
 			$("#markers").mouseup(
 					function(e) {
 						if (dragging && dragging_box != null) {
-							$('#markers').append(
-									'<br/><a href="' + dragging_box.link
+							$('#bookmarks').append(
+									'<li><a href="' + dragging_box.link
 											+ '" target="_blank">'
-											+ dragging_box.link + '</a>');
+											+ dragging_box.title + '</a></li>');
 						}
 						dragging = false;
 						dragging_box = null;
@@ -68,13 +71,14 @@ $(document).ready(
 					});
 		})
 
-function BoxObject(x1, y1, x2, y2, link, link_id) {
+function BoxObject(x1, y1, x2, y2, link, link_id, title) {
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
 	this.y2 = y2;
 	this.link = link;
 	this.link_id = link_id;
+	this.title = title;
 
 	this.isInside = isInside;
 	function isInside(x, y) {
@@ -90,7 +94,7 @@ function BoxObject(x1, y1, x2, y2, link, link_id) {
 	this.getCopy = getCopy;
 	function getCopy() {
 		return new BoxObject(this.x1, this.y1, this.x2, this.y2, this.link,
-				this.link_id);
+				this.link_id, this.title);
 	}
 }
 
@@ -102,7 +106,12 @@ function parseFrames(xml) {
 		console.log("link gefunden:" + $(this).attr('dest'));
 		var destination = $(this).attr('dest');
 		var link_id = $(this).attr('object');
-		links[link_id] = destination;
+		var title = $(this).find('title').text();
+		var linkObject = new Object();
+		linkObject.destination = destination;
+		linkObject.title = title;
+		
+		links[link_id] = linkObject;
 	});
 
 	// process single frames as jQuery objects
@@ -121,7 +130,7 @@ function parseFrames(xml) {
 						start: index / FRAMERATE,
 						onStart : function(options){
 							box = null;
-							$('#timeline').empty();
+							// $('#timeline').empty();
 							var canvas = document.getElementById('linkcanvas');
 							if (canvas.getContext) {
 								var context = canvas.getContext('2d');
@@ -137,29 +146,33 @@ function parseFrames(xml) {
 						onStart : function(options) {
 							// $('#linkmap').empty();
 							var object_id = $BoundingBox.attr('id');
-							var destination = links[object_id];
+							var linkObject = links[object_id];
+							var destination = linkObject.destination;
+							var title = linkObject.title;
 
 							var x1 = $BoundingBox.find("Min").attr("X");
 							var y1 = $BoundingBox.find("Min").attr("Y");
 							var x2 = $BoundingBox.find("Max").attr("X");
 							var y2 = $BoundingBox.find("Max").attr("Y");
 							box = new BoxObject(x1, y1, x2, y2, destination,
-									object_id);
+									object_id, title);
 							// var coordinates = x1+','+y1+','+x2+','+y2;
 							// var area_html = '<area shape="rect"
 							// coords="'+coordinates+'" href="'+destination+
 							// '"alt="'+object_id+'" title="'+object_id+'"/>';
-							$('#timeline').html(
-									"<a href='" + destination + "'>"
-											+ destination + index + "</a>");
-							// $('#linkmap').html(area_html);
+							
+							//$('#timeline').html(
+							//"<a href='" + destination + "'>"
+							//				+ destination + index + "</a>");
+							
+					// $('#linkmap').html(area_html);
 
 							var canvas = document.getElementById('linkcanvas');
 							if (canvas.getContext) {
 								var context = canvas.getContext('2d');
 								// Erase canvas
 								context.canvas.height = context.canvas.height;
-								context.fillStyle = 'rgba(127,255,127,0.5)';
+								context.fillStyle = 'rgba(127,127,127,0.4)';
 								context.fillRect(x1, y1, x2 - x1, y2 - y1);
 							}
 

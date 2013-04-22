@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <nle_data>
 	<links>
-		<link object="1" dest="http://Buch1.org"></link>
-		<link object="2" dest="http://Buch2.org"></link>
-		<link object="3" dest="http://Buch3.org"></link>
+		<link object="1" dest="http://Buch1.org"><title>Erstes Buch</title></link>
+		<link object="2" dest="http://Buch2.org"><title>Zweites Buch</title></link>
+		<link object="3" dest="http://Buch3.org"><title>Drittes Buch</title></link>
 	</links>
 <frames>
   <frame id="2348">
