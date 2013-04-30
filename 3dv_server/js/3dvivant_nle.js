@@ -59,10 +59,13 @@ $(document).ready(
 			$("#markers").mouseup(
 					function(e) {
 						if (dragging && dragging_box != null) {
-							$('#bookmarks').append(
-									'<li><a href="' + dragging_box.link
+							if (checkDouble($('#markers').find('a'),dragging_box.title)){ console.log("already there ...");}
+							else {
+							$('#markers').append(
+									'<div class="bookentry"><img width="60" src="'+dragging_box.thumb+'"/><a href="' + dragging_box.link
 											+ '" target="_blank">'
-											+ dragging_box.title + '</a></li>');
+											+ dragging_box.title + '</a></div>');
+							}
 						}
 						dragging = false;
 						dragging_box = null;
@@ -71,7 +74,17 @@ $(document).ready(
 					});
 		})
 
-function BoxObject(x1, y1, x2, y2, link, link_id, title) {
+function checkDouble($results,text){
+	console.log("checkdouble"+$results);
+	var check = false;
+	$($results).each(function(){
+		console.log("this:"+$(this)+" text:"+$(this).text());
+		if ($(this).text() == text) check = true;
+	});
+	return check;
+}
+		
+function BoxObject(x1, y1, x2, y2, link, link_id, title, author, thumb) {
 	this.x1 = x1;
 	this.y1 = y1;
 	this.x2 = x2;
@@ -79,6 +92,8 @@ function BoxObject(x1, y1, x2, y2, link, link_id, title) {
 	this.link = link;
 	this.link_id = link_id;
 	this.title = title;
+	this.author = author;
+	this.thumb = thumb;
 
 	this.isInside = isInside;
 	function isInside(x, y) {
@@ -94,7 +109,7 @@ function BoxObject(x1, y1, x2, y2, link, link_id, title) {
 	this.getCopy = getCopy;
 	function getCopy() {
 		return new BoxObject(this.x1, this.y1, this.x2, this.y2, this.link,
-				this.link_id, this.title);
+				this.link_id, this.title, this.author, this.thumb);
 	}
 }
 
@@ -104,12 +119,13 @@ function parseFrames(xml) {
 
 	$(xml).find('links > link').each(function() {
 		console.log("link gefunden:" + $(this).attr('dest'));
-		var destination = $(this).attr('dest');
+		var link = $(this).attr('dest');
 		var link_id = $(this).attr('object');
 		var title = $(this).find('title').text();
-		var linkObject = new Object();
-		linkObject.destination = destination;
-		linkObject.title = title;
+		var author = $(this).find('author').text();
+		var thumb = $(this).find('image').text();
+		
+		var linkObject = new BoxObject(0,0,0,0,link,link_id,title,author,thumb);
 		
 		links[link_id] = linkObject;
 	});
@@ -117,10 +133,10 @@ function parseFrames(xml) {
 	// process single frames as jQuery objects
 	$(xml).find('frames > frame').each(
 			function() {
-				console.log(" frame:" + $(this).attr('id'));
+				// console.log(" frame:" + $(this).attr('id'));
 				var index = $(this).attr('id');
 				var $BoundingBox = $(this).find('BoundingBox');
-				console.log("BoundingBox:" + $BoundingBox.length);
+				// console.log("BoundingBox:" + $BoundingBox.length);
 				// <area shape="rect" coords="11,10,59,29"
 				// href="http://www.koblenz.de/"
 				// alt="Koblenz" title="Koblenz">
@@ -146,16 +162,14 @@ function parseFrames(xml) {
 						onStart : function(options) {
 							// $('#linkmap').empty();
 							var object_id = $BoundingBox.attr('id');
-							var linkObject = links[object_id];
-							var destination = linkObject.destination;
-							var title = linkObject.title;
+							var obj = links[object_id];
 
 							var x1 = $BoundingBox.find("Min").attr("X");
 							var y1 = $BoundingBox.find("Min").attr("Y");
 							var x2 = $BoundingBox.find("Max").attr("X");
 							var y2 = $BoundingBox.find("Max").attr("Y");
-							box = new BoxObject(x1, y1, x2, y2, destination,
-									object_id, title);
+							box = new BoxObject(x1, y1, x2, y2, obj.link,
+									obj.link_id, obj.title, obj.author, obj.thumb);
 							// var coordinates = x1+','+y1+','+x2+','+y2;
 							// var area_html = '<area shape="rect"
 							// coords="'+coordinates+'" href="'+destination+
@@ -176,7 +190,7 @@ function parseFrames(xml) {
 								context.fillRect(x1, y1, x2 - x1, y2 - y1);
 							}
 
-							console.log("index:" + index);
+							//console.log("index:" + index);
 						}
 					});
 				}// end else
