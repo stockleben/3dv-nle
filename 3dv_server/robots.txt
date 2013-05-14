@@ -1,0 +1,6 @@
+# robots.txt zu http://www.zeitgefuehle.org/
+
+User-agent: *
+Disallow: /videomixer/
+Disallow: /andalus/
+Disallow: /3dv/
