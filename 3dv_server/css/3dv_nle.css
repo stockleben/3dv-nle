@@ -1,0 +1,25 @@
+@CHARSET "ISO-8859-1";
+
+div.bookentry {
+	#width: 200px;
+	border: 1px solid black;
+}
+
+div.bookentry p {
+	padding: 5px;
+	margin-top: 0px;
+}
+
+div.bookentry img {
+	float:left;
+	margin: 5px;
+}
+
+div.bookentry br {
+	width:0;
+	height:0;
+	font-size: 0;
+	line-height: 0;
+}
+
+.clearing {clear: both;}
