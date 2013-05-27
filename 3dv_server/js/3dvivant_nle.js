@@ -189,9 +189,17 @@ function parseFrames(xml) {
 								context.fillStyle = 'rgba(127,127,127,0.4)';
 								context.fillRect(x1, y1, x2 - x1, y2 - y1);
 							}
+							
+							$('#current_item').empty();
+							
+							$('#current_item').append(
+									'<div class="bookentry" id="'+box.link_id+'"><img width="60" src="'+box.thumb+'"/><a href="' + box.link
+											+ '" target="_blank">'
+											+ box.title + '</a></div>');
+							}
 
 							//console.log("index:" + index);
-						}
+						
 					});
 				}// end else
 			});
