@@ -1,89 +1,130 @@
 console.log('huhu');
 var FRAMERATE = 25;
 var box;
-//var empty_box = new BoxObject(0, 0, 0, 0, null, 0);
+// var empty_box = new BoxObject(0, 0, 0, 0, null, 0);
 var dragging_box;
-var dragging = false;
 box = null;
 
-$(document).ready(
-		function() {
+$(document)
+		.ready(
+				function() {
 
-			// $('#markers').disableSelection();
+					// $('#markers').disableSelection();
 
-			// create popcorn instance
-			pop = Popcorn("#video", {
-				frameAnimation : true,
-				frameRate : FRAMERATE
-			});
-			// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
-			links = new Object();
-			// var $frames = new Object();
+					$("#canvas_div")
+							.draggable(
+									{
+										opacity : 0.7,
+										cursor : "move",
+										cursorAt : {
+											top : 0,
+											left : 0
+										},
+										helper : function(event) {
+											return $('<div class="bookentry"><img width="60" src="'
+													+ dragging_box.thumb
+													+ '"/><p>'+dragging_box.author+'</p>'
+													+ '<a href="'
+													+ dragging_box.link
+													+ '" target="_blank">'
+													+ dragging_box.title
+													+ '</a><br class="clearing" /></div>');		
+											/*
+											console.log("calling helper function");
+											if (box !== null) {
+												console.log("box !== null");
+												var action = box.isInside(e.pageX, e.pageY);
+												if (action){
+													console.log("action is true");
+													dragging_box = box.getCopy();
+													return $('<div class="bookentry"><img width="60" src="'
+															+ dragging_box.thumb
+															+ '"/><p>'+dragging_box.author+'</p>'
+															+ '<a href="'
+															+ dragging_box.link
+															+ '" target="_blank">'
+															+ dragging_box.title
+															+ '</a><br class="clearing" /></div>');		
+												} else return null;
+												
+											} else return null;
+											*/
+										}
+									});
 
-			$.get('res/test.xml', function(data) {
-				parseFrames(data);
-			});
+					$("#markers").droppable(
+							{
+								drop : function(event, ui) {
+									console.log("drop accepted.");
+									// $( this ).addClass( "ui-state-highlight"
+									// ).find( "p" ).html( "Dropped!" );
+									// $( this ).append(ui.draggable);
+									if (checkDouble($('#markers').find('a'),
+											dragging_box.title)) {
+										console.log("already there ...");
+									} else {
+										$(this).append(
+												'<div class="bookentry"><img width="60" src="' +
+														dragging_box.thumb +
+														'"/><p>'+dragging_box.author+'</p>' +
+														'<a href="' +
+														dragging_box.link +
+														'" target="_blank">' +
+														dragging_box.title +
+														'</a><br class="clearing" /></div>');
 
-			$("#canvas_div").mousedown(
-					function(e) {
-						if (box != null){
-						var action = box.isInside(e.pageX, e.pageY);
-						document.getSelection().removeAllRanges();
-						/*
-						$('#position').html(
-								e.pageX + ', ' + e.pageY + "isInside:" + action
-										+ "<br/>" + box.toString());
-						*/
-						
-						if (action) {
-							dragging_box = box.getCopy();
-							dragging = true;
+									}
+								}
+							});
 
-							$('#canvas_div').css('cursor', 'pointer');
-							$('#markers').css('cursor', 'pointer');
-						}
-						}
+					// create popcorn instance
+					pop = Popcorn("#video", {
+						frameAnimation : true,
+						frameRate : FRAMERATE
+					});
+					// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
+					links = {};
+					// var $frames = new Object();
+
+					$.get('res/test.xml', function(data) {
+						parseFrames(data);
 					});
 
-			$("#canvas_div").mouseup(function(e) {
-				if (dragging && dragging_box != null) {
-					pop.pause();
-					window.open(box.link);
-				}
-				dragging = false;
-				dragging_box = null;
-				$('#canvas_div').css('cursor', 'default');
-				$('#markers').css('cursor', 'default');
-			});
+					$("#canvas_div").mousedown(function(e) {
+						if (box !== null) {
+							var action = box.isInside(e.pageX, e.pageY);
+							document.getSelection().removeAllRanges();
+							/*
+							 * $('#position').html( e.pageX + ', ' + e.pageY +
+							 * "isInside:" + action + "<br/>" +
+							 * box.toString());
+							 */
 
-			$("#markers").mouseup(
-					function(e) {
-						if (dragging && dragging_box != null) {
-							if (checkDouble($('#markers').find('a'),dragging_box.title)){ console.log("already there ...");}
-							else {
-							$('#markers').append(
-									'<div class="bookentry"><img width="60" src="'+dragging_box.thumb+'"/><a href="' + dragging_box.link
-											+ '" target="_blank">'
-											+ dragging_box.title + '</a></div>');
+							if (action) {
+								dragging_box = box.getCopy();
+								dragging = true;
+
+								$('#canvas_div').css('cursor', 'pointer');
+								$('#markers').css('cursor', 'pointer');
+
 							}
 						}
-						dragging = false;
-						dragging_box = null;
-						$('#canvas_div').css('cursor', 'default');
-						$('#markers').css('cursor', 'default');
 					});
-		})
 
-function checkDouble($results,text){
-	console.log("checkdouble"+$results);
+
+				});
+
+function checkDouble($results, text) {
+	console.log("checkdouble" + $results);
 	var check = false;
-	$($results).each(function(){
-		console.log("this:"+$(this)+" text:"+$(this).text());
-		if ($(this).text() == text) check = true;
+	$($results).each(function() {
+		console.log("this:" + $(this) + " text:" + $(this).text());
+		if ($(this).text() == text)
+			check = true;
 	});
 	return check;
 }
-		
+
 function BoxObject(x1, y1, x2, y2, link, link_id, title, author, thumb) {
 	this.x1 = x1;
 	this.y1 = y1;
@@ -117,18 +158,20 @@ function parseFrames(xml) {
 	console.log("parseFrames");
 	// var count = 3;
 
-	$(xml).find('links > link').each(function() {
-		console.log("link gefunden:" + $(this).attr('dest'));
-		var link = $(this).attr('dest');
-		var link_id = $(this).attr('object');
-		var title = $(this).find('title').text();
-		var author = $(this).find('author').text();
-		var thumb = $(this).find('image').text();
-		
-		var linkObject = new BoxObject(0,0,0,0,link,link_id,title,author,thumb);
-		
-		links[link_id] = linkObject;
-	});
+	$(xml).find('links > link').each(
+			function() {
+				console.log("link gefunden:" + $(this).attr('dest'));
+				var link = $(this).attr('dest');
+				var link_id = $(this).attr('object');
+				var title = $(this).find('title').text();
+				var author = $(this).find('author').text();
+				var thumb = $(this).find('image').text();
+
+				var linkObject = new BoxObject(0, 0, 0, 0, link, link_id,
+						title, author, thumb);
+
+				links[link_id] = linkObject;
+			});
 
 	// process single frames as jQuery objects
 	$(xml).find('frames > frame').each(
@@ -141,10 +184,10 @@ function parseFrames(xml) {
 				// href="http://www.koblenz.de/"
 				// alt="Koblenz" title="Koblenz">
 				// $('')
-				if ($BoundingBox.length == 0) {
+				if ($BoundingBox.length === 0) {
 					pop.code({
-						start: index / FRAMERATE,
-						onStart : function(options){
+						start : index / FRAMERATE,
+						onStart : function(options) {
 							box = null;
 							// $('#timeline').empty();
 							var canvas = document.getElementById('linkcanvas');
@@ -169,17 +212,18 @@ function parseFrames(xml) {
 							var x2 = $BoundingBox.find("Max").attr("X");
 							var y2 = $BoundingBox.find("Max").attr("Y");
 							box = new BoxObject(x1, y1, x2, y2, obj.link,
-									obj.link_id, obj.title, obj.author, obj.thumb);
+									obj.link_id, obj.title, obj.author,
+									obj.thumb);
 							// var coordinates = x1+','+y1+','+x2+','+y2;
 							// var area_html = '<area shape="rect"
 							// coords="'+coordinates+'" href="'+destination+
 							// '"alt="'+object_id+'" title="'+object_id+'"/>';
-							
-							//$('#timeline').html(
-							//"<a href='" + destination + "'>"
-							//				+ destination + index + "</a>");
-							
-					// $('#linkmap').html(area_html);
+
+							// $('#timeline').html(
+							// "<a href='" + destination + "'>"
+							// + destination + index + "</a>");
+
+							// $('#linkmap').html(area_html);
 
 							var canvas = document.getElementById('linkcanvas');
 							if (canvas.getContext) {
@@ -189,22 +233,24 @@ function parseFrames(xml) {
 								context.fillStyle = 'rgba(127,127,127,0.4)';
 								context.fillRect(x1, y1, x2 - x1, y2 - y1);
 							}
-							
-							$('#current_item').empty();
-							
-							$('#current_item').append(
-									'<div class="bookentry" id="'+box.link_id+'"><img width="60" src="'+box.thumb+'"/><a href="' + box.link
-											+ '" target="_blank">'
-											+ box.title + '</a></div>');
-							}
 
-							//console.log("index:" + index);
-						
+							$('#current_item').empty();
+
+							$('#current_item').append(
+									'<div class="bookentry" id="' + box.link_id
+											+ '"><img width="60" src="'
+											+ box.thumb + '"/><a href="'
+											+ box.link + '" target="_blank">'
+											+ box.title + '</a></div>');
+						}
+
+					// console.log("index:" + index);
+
 					});
 				}// end else
 			});
 	console.log('parseFrames end');
-};
+}
 
 console.log('hihi');
 
