@@ -59,13 +59,9 @@
 	<div class="span2">
 		<ul id="object_list" class="nav nav-list">
 			<li class="nav-header">Traced Objects</li>
-			<li class="active"><a href="#">Blaues Buch</a></li>
-			<li><a href="#">Rotes Buch</a></li>
-			<li class="divider"></li>
-			<li><a href="#">add a new object</a>
 		</ul>		
 	</div>
-	<div class="span10" id="videopane" >
+	<div class="span10" id="videopane" style="position: relative">
 		<div id="videopane" >
 		<video height="540" width="960" id="video" controls>
 			<source src="res/quergelesen.m4v"></source>
@@ -86,7 +82,7 @@
 			<label>link</label>	
 			<input id="object_link" type="text"/>
 			
-			<button type="submit" class="btn">save changes</button>
+			<input onclick="save_object_data();" class="btn" value="save changes"></input>
 		</form>
 	</div><!-- /row -->
 	<input type="button" class="btn" onclick="print_xml();" value="PRINT XML">

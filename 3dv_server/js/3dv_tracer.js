@@ -113,10 +113,15 @@ function update_ui(){
 	$.each(trackobjects, function(object_index, value) {
 		console.log('update_ui '+object_index);
 		if (object_index == current_trackobject_index) $("#object_list").append('<li class="active"><a href="#">'+value.title+'</a></li>');
-		else $("#object_list").append('<li><a href="#">'+value.title+'</a></li>');		
+		else $("#object_list").append('<li><a onclick="select_object('+object_index+');" href="#">'+value.title+'</a></li>');		
 	});
 	
 	$("#object_list").append('<li class="divider"></li><li><a onclick="add_object();" href="#">add a new object</a></li>');
+}
+
+function select_object(object_index){
+	current_trackobject_index = object_index;
+	update_ui();
 }
 
 function add_object(){
@@ -124,7 +129,15 @@ function add_object(){
 	trackobjects.push(new TrackObject('title', 'description', 'author', 'link', 'thumb'));
 	current_trackobject_index++;
 	update_ui();
-	
+}
+
+function save_object_data(){
+	console.log("save object data");
+	trackobjects[current_trackobject_index].title = $("#object_data #object_name").val();
+	trackobjects[current_trackobject_index].description = $("#object_data #object_description").val();
+	trackobjects[current_trackobject_index].link = $("#object_data #object_link").val();
+	trackobjects[current_trackobject_index].thumb = $("#object_data #object_image").val();
+	update_ui();
 }
 
 function prepare_trackpoints(media_duration) {
@@ -149,9 +162,9 @@ function create_trackpoint(options) {
 	// console.log("called create_trackpoint");
 	if (mouseDown) {
 		console.log("cueMouseDown");
-
-		var x1 = mouseX;
-		var y1 = mouseY;
+		var video_offset = $("#video").offset();
+		var x1 = mouseX-video_offset.left;
+		var y1 = mouseY-video_offset.top;
 		console.log("break 1");
 		var tp = new TrackPoint(x1, y1, this.currentTime(), OBJECT_ID);
 		console.log(tp.toXML());
