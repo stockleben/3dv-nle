@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>3D-Vivant Tracer Bootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">3D Vivant Tracer</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+
+      <h1>3D Vivant Object Tracing Application</h1>
+      <p>Use this document as a way to quick start any new project.<br> All you get is this message and a barebones HTML document.</p>
+	<div class="row-fluid">
+	<div class="span2">
+		<ul id="object_list" class="nav nav-list">
+			<li class="nav-header">Traced Objects</li>
+			<li class="active"><a href="#">Blaues Buch</a></li>
+			<li><a href="#">Rotes Buch</a></li>
+			<li class="divider"></li>
+			<li><a href="#">add a new object</a>
+		</ul>		
+	</div>
+	<div class="span10" id="videopane" >
+		<div id="videopane" >
+		<video height="540" width="960" id="video" controls>
+			<source src="res/quergelesen.m4v"></source>
+			<source src="res/quergelesen.ogv"></source>
+		</video>
+		<canvas id="marker_canvas" style="position: absolute; top: 0px; left: 0px" width="960" height="500"></canvas>
+		</div>
+	</div> <!-- /span10 -->
+	</div><!-- /row -->
+	<div class="row-fluid">
+		<form id="object_data" class="form-inline">
+			<label>object name</label> 
+			<input id="object_name" type="text"/>
+			<label>description</label>
+			<input id="object_description" type="text"/>
+			<!-- label>thumbnail</label>
+			<input type="file" class="btn"/-->
+			<label>link</label>	
+			<input id="object_link" type="text"/>
+			
+			<button type="submit" class="btn">save changes</button>
+		</form>
+	</div><!-- /row -->
+	<input type="button" class="btn" onclick="print_xml();" value="PRINT XML">
+    </div> <!-- /container-fluid -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+	<script src="js/popcorn-complete.js"></script>
+	<script defer src="js/3dv_tracer.js"></script>
+
+  </body>
+</html>
