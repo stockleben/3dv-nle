@@ -116,7 +116,15 @@ function update_ui(){
 		else $("#object_list").append('<li><a href="#">'+value.title+'</a></li>');		
 	});
 	
-	$("#object_list").append('<li class="divider"></li><li><a href="#">add a new object</a></li>');
+	$("#object_list").append('<li class="divider"></li><li><a onclick="add_object();" href="#">add a new object</a></li>');
+}
+
+function add_object(){
+	console.log("add object");
+	trackobjects.push(new TrackObject('title', 'description', 'author', 'link', 'thumb'));
+	current_trackobject_index++;
+	update_ui();
+	
 }
 
 function prepare_trackpoints(media_duration) {
