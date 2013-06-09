@@ -54,8 +54,8 @@ function TrackPoint(x1, y1, frame) {
 
 	function toXML(object_id) {
 		return '<frame id="' + frame + '"><BoundingBox id="' + object_id
-				+ '"><Min Y="' + (y1 - 20) + '" X="' + (x1 - 20) + '" />'
-				+ '<Max Y="' + (y1 + 20) + '" X="' + (x1 + 20)
+				+ '"><Min Y="' + (y1 - 40) + '" X="' + (x1 - 40) + '" />'
+				+ '<Max Y="' + (y1 + 40) + '" X="' + (x1 + 40)
 				+ '" /></BoundingBox></frame>';
 	}
 	console.log("finished creating TrackPoint");
@@ -81,6 +81,27 @@ $(document).ready(function() {
 	trackobjects.push(new TrackObject('title', 'description', 'author', 'link', 'thumb'));
 	current_trackobject_index = 0;
 	update_ui();
+	$("#object_data #object_name").change(function(){
+		trackobjects[current_trackobject_index].title = $("#object_data #object_name").val();
+		update_ui();
+	});
+	$("#object_data #object_author").change(function(){
+		trackobjects[current_trackobject_index].author = $("#object_data #object_author").val();
+		update_ui();
+	});
+	$("#object_data #object_description").change(function(){
+		trackobjects[current_trackobject_index].description = $("#object_data #object_description").val();
+		update_ui();
+	});
+	$("#object_data #object_link").change(function(){
+		trackobjects[current_trackobject_index].link = $("#object_data #object_link").val();
+		update_ui();
+	});
+	$("#object_data #object_image").change(function(){
+		trackobjects[current_trackobject_index].thumb = $("#object_data #object_image").val();
+		update_ui();
+	});
+	
 	
 	// create popcorn instance
 	pop = Popcorn("#video", {
@@ -104,6 +125,7 @@ $(document).ready(function() {
 function update_ui(){
 	var object = trackobjects[current_trackobject_index];
 	$("#object_data #object_name").val(object.title);
+	$("#object_data #object_author").val(object.author);
 	$("#object_data #object_description").val(object.description);
 	$("#object_data #object_link").val(object.link);
 	$("#object_data #object_image").val(object.thumb);
@@ -131,15 +153,6 @@ function add_object(){
 	update_ui();
 }
 
-function save_object_data(){
-	console.log("save object data");
-	trackobjects[current_trackobject_index].title = $("#object_data #object_name").val();
-	trackobjects[current_trackobject_index].description = $("#object_data #object_description").val();
-	trackobjects[current_trackobject_index].link = $("#object_data #object_link").val();
-	trackobjects[current_trackobject_index].thumb = $("#object_data #object_image").val();
-	update_ui();
-}
-
 function prepare_trackpoints(media_duration) {
 	// create popcorn instance
 	pop = Popcorn("#video", {
@@ -163,22 +176,17 @@ function create_trackpoint(options) {
 	if (mouseDown) {
 		console.log("cueMouseDown");
 		var video_offset = $("#video").offset();
-		var x1 = mouseX-video_offset.left;
-		var y1 = mouseY-video_offset.top;
-		console.log("break 1");
-		var tp = new TrackPoint(x1, y1, this.currentTime(), OBJECT_ID);
+		var x1 = Math.floor(mouseX-video_offset.left);
+		var y1 = Math.floor(mouseY-video_offset.top);
+		var tp = new TrackPoint(x1, y1, Math.floor(this.currentTime()*FRAMERATE), OBJECT_ID);
 		console.log(tp.toXML());
 		trackobjects[current_trackobject_index].trackpoints.push(tp);
-		console.log("break 2");
 		var canvas = document.getElementById('marker_canvas');
-		console.log("break 3");
 		if (canvas.getContext) {
-			console.log("break 4");
 			var context = canvas.getContext('2d');
 			// Erase canvas
 			// context.canvas.height = context.canvas.height;
 			context.fillStyle = 'rgba(127,127,127,0.4)';
-			console.log("break 5");
 			context.fillRect(x1 - 5, y1 - 5, 10, 10);
 		}
 
@@ -193,7 +201,7 @@ function create_trackpoint(options) {
 	}
 }
 
-function print_xml() {
+function save_xml() {
 	console.log("print_xml called");
 	var output_xml = '<?xml version="1.0" encoding="utf-8"?><nle_data><links>';
 	$.each(trackobjects, function(object_index, value) {
@@ -207,7 +215,9 @@ function print_xml() {
 			output_xml = output_xml + value.toXML(object_index);
 		});
 	});
-	output_xml = output_xml + '</frames>';
-	console.log(output_xml);
-	return output_xml;
+	output_xml = output_xml + '</frames></nle_data>';
+	//console.log(output_xml);
+	$.post("create_xml_file.php",{data: output_xml},function(data){
+		console.log("Data was saved successfully");
+	});
 }

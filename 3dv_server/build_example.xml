@@ -13,6 +13,7 @@
 		<copydir src="./css" dest="${HTDOCS}/css" includes="**/*.*" />
 		<copydir src="./res" dest="${HTDOCS}/res" includes="**/*.*" />
 		<copydir src="." dest="${HTDOCS}" includes = "**/*.html" />
+		<copydir src="." dest="${HTDOCS}" includes = "**/*.php" />
 	</target>
 
 </project>

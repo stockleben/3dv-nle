@@ -1,35 +1,35 @@
 console.log('huhu');
 var FRAMERATE = 25;
 var box;
-// var empty_box = new BoxObject(0, 0, 0, 0, null, 0);
+//var empty_box = new BoxObject(0, 0, 0, 0, null, 0);
 var dragging_box;
 box = null;
 
 $(document)
-		.ready(
-				function() {
+.ready(
+		function() {
 
-					// $('#markers').disableSelection();
+			// $('#markers').disableSelection();
 
-					$("#canvas_div")
-							.draggable(
-									{
-										opacity : 0.7,
-										cursor : "move",
-										cursorAt : {
-											top : 0,
-											left : 0
-										},
-										helper : function(event) {
-											return $('<div class="bookentry"><img width="60" src="'
-													+ dragging_box.thumb
-													+ '"/><p>'+dragging_box.author+'</p>'
-													+ '<a href="'
-													+ dragging_box.link
-													+ '" target="_blank">'
-													+ dragging_box.title
-													+ '</a><br class="clearing" /></div>');		
-											/*
+			$("#canvas_div")
+			.draggable(
+					{
+						opacity : 0.7,
+						cursor : "move",
+						cursorAt : {
+							top : 0,
+							left : 0
+						},
+						helper : function(event) {
+							return $('<div class="bookentry"><img width="60" src="'
+									+ dragging_box.thumb
+									+ '"/><p>'+dragging_box.author+'</p>'
+									+ '<a href="'
+									+ dragging_box.link
+									+ '" target="_blank">'
+									+ dragging_box.title
+									+ '</a><br class="clearing" /></div>');		
+							/*
 											console.log("calling helper function");
 											if (box !== null) {
 												console.log("box !== null");
@@ -46,73 +46,74 @@ $(document)
 															+ dragging_box.title
 															+ '</a><br class="clearing" /></div>');		
 												} else return null;
-												
+
 											} else return null;
-											*/
-										}
-									});
-
-					$("#markers").droppable(
-							{
-								drop : function(event, ui) {
-									console.log("drop accepted.");
-									// $( this ).addClass( "ui-state-highlight"
-									// ).find( "p" ).html( "Dropped!" );
-									// $( this ).append(ui.draggable);
-									if (checkDouble($('#markers').find('a'),
-											dragging_box.title)) {
-										console.log("already there ...");
-									} else {
-										$(this).append(
-												'<div class="bookentry"><img width="60" src="' +
-														dragging_box.thumb +
-														'"/><p>'+dragging_box.author+'</p>' +
-														'<a href="' +
-														dragging_box.link +
-														'" target="_blank">' +
-														dragging_box.title +
-														'</a><br class="clearing" /></div>');
-
-									}
-								}
-							});
-
-					// create popcorn instance
-					pop = Popcorn("#video", {
-						frameAnimation : true,
-						frameRate : FRAMERATE
-					});
-					// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
-					links = {};
-					// var $frames = new Object();
-
-					$.get('res/test.xml', function(data) {
-						parseFrames(data);
-					});
-
-					$("#canvas_div").mousedown(function(e) {
-						if (box !== null) {
-							var action = box.isInside(e.pageX, e.pageY);
-							document.getSelection().removeAllRanges();
-							/*
-							 * $('#position').html( e.pageX + ', ' + e.pageY +
-							 * "isInside:" + action + "<br/>" +
-							 * box.toString());
 							 */
+						}
+					});
 
-							if (action) {
-								dragging_box = box.getCopy();
-								dragging = true;
-
-								$('#canvas_div').css('cursor', 'pointer');
-								$('#markers').css('cursor', 'pointer');
+			$("#markers").droppable(
+					{
+						drop : function(event, ui) {
+							console.log("drop accepted.");
+							// $( this ).addClass( "ui-state-highlight"
+							// ).find( "p" ).html( "Dropped!" );
+							// $( this ).append(ui.draggable);
+							if (checkDouble($('#markers').find('a'),
+									dragging_box.title)) {
+								console.log("already there ...");
+							} else {
+								$(this).append(
+										'<div class="bookentry"><img width="60" src="' +
+										dragging_box.thumb +
+										'"/><p>'+dragging_box.author+'</p>' +
+										'<a href="' +
+										dragging_box.link +
+										'" target="_blank">' +
+										dragging_box.title +
+								'</a><br class="clearing" /></div>');
 
 							}
 						}
 					});
 
+			// create popcorn instance
+			pop = Popcorn("#video", {
+				frameAnimation : true,
+				frameRate : FRAMERATE
+			});
+			// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
+			links = {};
+			// var $frames = new Object();
 
-				});
+			$.get('res/tracedata.xml', function(data) {
+				parseFrames(data);
+			});
+
+			$("#canvas_div").mousedown(function(e) {
+				if (box !== null) {
+					var video_offset = $("#video").offset();
+					var action = box.isInside(e.pageX-video_offset.left, e.pageY-video_offset.top);
+					document.getSelection().removeAllRanges();
+					/*
+					 * $('#position').html( e.pageX + ', ' + e.pageY +
+					 * "isInside:" + action + "<br/>" +
+					 * box.toString());
+					 */
+
+					if (action) {
+						dragging_box = box.getCopy();
+						dragging = true;
+
+						$('#canvas_div').css('cursor', 'pointer');
+						$('#markers').css('cursor', 'pointer');
+
+					}
+				}
+			});
+
+			console.log("page ready.");
+		});
 
 function checkDouble($results, text) {
 	console.log("checkdouble" + $results);
@@ -144,7 +145,7 @@ function BoxObject(x1, y1, x2, y2, link, link_id, title, author, thumb) {
 	this.toString = toString;
 	function toString() {
 		return "BoxObject " + x1 + "," + y1 + "," + x2 + "," + y2 + " link:"
-				+ link + " link_id:" + link_id;
+		+ link + " link_id:" + link_id;
 	}
 
 	this.getCopy = getCopy;
@@ -211,6 +212,9 @@ function parseFrames(xml) {
 							var y1 = $BoundingBox.find("Min").attr("Y");
 							var x2 = $BoundingBox.find("Max").attr("X");
 							var y2 = $BoundingBox.find("Max").attr("Y");
+
+							create_stars(x1,y1,x2,y2,3);
+
 							box = new BoxObject(x1, y1, x2, y2, obj.link,
 									obj.link_id, obj.title, obj.author,
 									obj.thumb);
@@ -225,23 +229,28 @@ function parseFrames(xml) {
 
 							// $('#linkmap').html(area_html);
 
-							var canvas = document.getElementById('linkcanvas');
-							if (canvas.getContext) {
-								var context = canvas.getContext('2d');
+							// ****************** canvas paint method ******************
+							
+							//var canvas = document.getElementById('linkcanvas');
+							//if (canvas.getContext) {
+							//	var context = canvas.getContext('2d');
 								// Erase canvas
-								context.canvas.height = context.canvas.height;
-								context.fillStyle = 'rgba(127,127,127,0.4)';
-								context.fillRect(x1, y1, x2 - x1, y2 - y1);
-							}
+							//	context.canvas.height = context.canvas.height;
+							//	context.fillStyle = 'rgba(127,127,127,0.4)';
+							//	context.fillRect(x1, y1, x2 - x1, y2 - y1);
+							//}
 
+							// ****************** /canvas paint method ******************
+
+							
 							$('#current_item').empty();
 
 							$('#current_item').append(
 									'<div class="bookentry" id="' + box.link_id
-											+ '"><img width="60" src="'
-											+ box.thumb + '"/><a href="'
-											+ box.link + '" target="_blank">'
-											+ box.title + '</a></div>');
+									+ '"><img width="60" src="'
+									+ box.thumb + '"/><a href="'
+									+ box.link + '" target="_blank">'
+									+ box.title + '</a></div>');
 						}
 
 					// console.log("index:" + index);
@@ -250,6 +259,30 @@ function parseFrames(xml) {
 				}// end else
 			});
 	console.log('parseFrames end');
+}
+
+function create_stars(x1,y1,x2,y2,no_of_stars){
+	var w = x2-x1;
+	var h = y2-y1;
+
+	for (var counter = 0; counter < no_of_stars; counter++ ){
+		var star_x = parseInt(x1);
+		var star_y = parseInt(y1);
+		for (var i = 0; i <= 2; i++ ) {
+			//console.log("star_x before: "+star_x);
+			star_x = star_x + Math.floor(Math.random()*w/3);
+			//console.log("star_x after: "+star_x);
+			star_y = star_y + Math.floor(Math.random()*h/3);
+		}						
+
+		var star = '<img src="res/star.png" class="star" style="position: absolute; top: '+ star_y +'px; left: '+ star_x +'px;" />';
+
+		$("#canvas_div").append(star);
+		$stars = $("#canvas_div .star");
+		$star = $stars.filter(":last").fadeOut(800, function(){
+			$(this).remove();
+		});
+	}
 }
 
 console.log('hihi');
