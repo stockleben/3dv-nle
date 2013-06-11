@@ -1,5 +1,6 @@
 console.log('huhu');
 var FRAMERATE = 25;
+var FADE = 5; // if an object's tracking data is not refreshed at 5 frames, the tracking is considered finished
 var box;
 //var empty_box = new BoxObject(0, 0, 0, 0, null, 0);
 var dragging_box;
@@ -29,26 +30,6 @@ $(document)
 									+ '" target="_blank">'
 									+ dragging_box.title
 									+ '</a><br class="clearing" /></div>');		
-							/*
-											console.log("calling helper function");
-											if (box !== null) {
-												console.log("box !== null");
-												var action = box.isInside(e.pageX, e.pageY);
-												if (action){
-													console.log("action is true");
-													dragging_box = box.getCopy();
-													return $('<div class="bookentry"><img width="60" src="'
-															+ dragging_box.thumb
-															+ '"/><p>'+dragging_box.author+'</p>'
-															+ '<a href="'
-															+ dragging_box.link
-															+ '" target="_blank">'
-															+ dragging_box.title
-															+ '</a><br class="clearing" /></div>');		
-												} else return null;
-
-											} else return null;
-							 */
 						}
 					});
 
@@ -86,7 +67,7 @@ $(document)
 			links = {};
 			// var $frames = new Object();
 
-			$.get('res/tracedata.xml', function(data) {
+			$.get('tmp/tracedata.xml', function(data) {
 				parseFrames(data);
 			});
 
@@ -138,10 +119,26 @@ function BoxObject(x1, y1, x2, y2, link, link_id, title, author, thumb) {
 	this.thumb = thumb;
 
 	this.isInside = isInside;
+	this.getDistance = getDistance;
+	//this.get_center_x = get_center_x;
+	//this.get_center_y = get_center_y;	
+	
 	function isInside(x, y) {
 		return (this.x1 < x) && (x < this.x2) && (this.y1 < y) && (y < this.y2);
 	}
+	
+	function getDistance(x,y){
+		return Math.sqrt(Math.pow(get_center_x-x,2)+Math.pow(get_center_y-y,2))
+	}
 
+	function get_center_x(){
+		return this.x1 + (this.x2-this.x1)/2;
+	}
+	
+	function get_center_y(){
+		return this.y1 + (this.y2-this.y1)/2;
+	}
+	
 	this.toString = toString;
 	function toString() {
 		return "BoxObject " + x1 + "," + y1 + "," + x2 + "," + y2 + " link:"
@@ -250,7 +247,7 @@ function parseFrames(xml) {
 									+ '"><img width="60" src="'
 									+ box.thumb + '"/><a href="'
 									+ box.link + '" target="_blank">'
-									+ box.title + '</a></div>');
+									+ box.title + '</a><br class="clearing" /></div>');
 						}
 
 					// console.log("index:" + index);

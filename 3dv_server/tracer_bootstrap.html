@@ -79,13 +79,15 @@
 			<input id="object_author" type="text"/>
 			<label>description</label>
 			<input id="object_description" type="text"/>
-			<!-- label>thumbnail</label>
-			<input type="file" class="btn"/-->
+			<label>thumbnail</label>
+			<input id="object_image" type="text"/>
 			<label>link</label>	
 			<input id="object_link" type="text"/>
 		</form>
 	</div><!-- /row -->
-	<input type="button" class="btn" onclick="save_xml();" value="SAVE OBJECT DATA">
+	<input type="button" class="btn" onclick="remove_tracking_data();" value="REMOVE TRACKING DATA FOR CURRENT OBJECT">
+	<input type="button" class="btn" onclick="remove_object();" value="REMOVE CURRENT OBJECT">
+	<input type="button" class="btn" onclick="save_xml();" value="SAVE ALL DATA">
     </div> <!-- /container-fluid -->
 
     <!-- Le javascript

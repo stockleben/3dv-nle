@@ -4,6 +4,8 @@ var FRAMERATE = 25;
 var FRAME_STEP = 2;
 // set playback speed for easier tracking
 var PLAYBACK_RATE = 0.3;
+// set size of hotspot area in pixel
+var HOTSPOT_SIZE = 100;
 
 // standard object id, maybe dynamic later
 var OBJECT_ID = 10;
@@ -40,7 +42,7 @@ function TrackObject(title, description, author, link, thumb) {
 
 // tracking point
 function TrackPoint(x1, y1, frame) {
-	console.log("creating TrackPoint");
+	//console.log("creating TrackPoint");
 	this.x1 = x1;
 	this.y1 = y1;
 	this.frame = frame;
@@ -54,16 +56,16 @@ function TrackPoint(x1, y1, frame) {
 
 	function toXML(object_id) {
 		return '<frame id="' + frame + '"><BoundingBox id="' + object_id
-				+ '"><Min Y="' + (y1 - 40) + '" X="' + (x1 - 40) + '" />'
-				+ '<Max Y="' + (y1 + 40) + '" X="' + (x1 + 40)
+				+ '"><Min Y="' + (y1 - HOTSPOT_SIZE) + '" X="' + (x1 - HOTSPOT_SIZE) + '" />'
+				+ '<Max Y="' + (y1 + HOTSPOT_SIZE) + '" X="' + (x1 + HOTSPOT_SIZE)
 				+ '" /></BoundingBox></frame>';
 	}
-	console.log("finished creating TrackPoint");
+	//console.log("finished creating TrackPoint");
 
 }
 
 $(document).ready(function() {
-
+	console.log("document loaded.");
 	document.onmousedown = function() {
 		mouseDown = true;
 		// console.log("mousedown");
@@ -77,10 +79,8 @@ $(document).ready(function() {
 		mouseX = event.pageX;
 		mouseY = event.pageY;
 	};
-
-	trackobjects.push(new TrackObject('title', 'description', 'author', 'link', 'thumb'));
-	current_trackobject_index = 0;
-	update_ui();
+	console.log("calling restore_xml()");
+	restore_xml();
 	$("#object_data #object_name").change(function(){
 		trackobjects[current_trackobject_index].title = $("#object_data #object_name").val();
 		update_ui();
@@ -153,6 +153,21 @@ function add_object(){
 	update_ui();
 }
 
+// removes the currently selected object
+function remove_object(){
+	if (trackobjects.length > 1){
+		trackobjects.splice(current_trackobject_index,1);
+		current_trackobject_index = 0;
+		update_ui();
+	}
+}
+
+function remove_tracking_data(){
+	trackobjects[current_trackobject_index].trackpoints = [];
+	clear_canvas();
+	update_ui();
+}
+
 function prepare_trackpoints(media_duration) {
 	// create popcorn instance
 	pop = Popcorn("#video", {
@@ -161,7 +176,6 @@ function prepare_trackpoints(media_duration) {
 	});
 
 	media_duration_frames = media_duration * FRAMERATE;
-	trackpoints = [];
 
 	for ( var i = 0; i < media_duration_frames; i = i + FRAME_STEP) {
 		// console.log("giving cues");
@@ -220,4 +234,73 @@ function save_xml() {
 	$.post("create_xml_file.php",{data: output_xml},function(data){
 		console.log("Data was saved successfully");
 	});
+}
+
+function restore_xml() {
+	console.log("started restore_xml()");
+	trackobjects = [];
+	current_trackobject_index = 0;
+	$.get('tmp/tracedata.xml', function(data) {
+		console.log(data);
+		console.log("Restoring XML.");
+		parseXML(data);
+		update_ui();
+	}).error(function(){
+		console.log("Failed to restore XML.");
+		trackobjects.push(new TrackObject('title', 'description', 'author', 'link', 'thumb'));
+		update_ui();
+	});
+
+}
+
+function parseXML(xml) {
+	console.log("parseXML");
+	// var count = 3;
+
+	$(xml).find('links > link').each(
+			function() {
+				console.log("link gefunden:" + $(this).attr('dest'));
+				var link = $(this).attr('dest');
+				var object_id = $(this).attr('object');
+				var title = $(this).find('title').text();
+				var author = $(this).find('author').text();
+				var thumb = $(this).find('image').text();
+				var description = $(this).find('description').text();
+
+				trackobjects.push(new TrackObject(title, description, author, link, thumb));
+			});
+
+	// process single frames as jQuery objects
+	$(xml).find('frames > frame').each(
+			function() {
+				var frame_index = $(this).attr('id');
+				var $BoundingBox = $(this).find('BoundingBox');
+				// console.log("BoundingBox:" + $BoundingBox.length);
+				// <area shape="rect" coords="11,10,59,29"
+				// href="http://www.koblenz.de/"
+				// alt="Koblenz" title="Koblenz">
+				// $('')
+				if ($BoundingBox.length === 0) {
+					// ignore bounding box if it is empty
+				} else {
+							var object_id = $BoundingBox.attr('id');
+							var trackpoints = trackobjects[object_id].trackpoints;
+							// revert box calculations
+							var x = $BoundingBox.find("Min").attr("X")+HOTSPOT_SIZE;
+							var y = $BoundingBox.find("Min").attr("Y")+HOTSPOT_SIZE;
+							var tp = new TrackPoint(x, y, frame_index);
+							trackpoints.push(tp);
+					}// end else
+			});
+	console.log('parseXML end');
+}
+
+function clear_canvas(){
+	var canvas = document.getElementById('marker_canvas');
+	if (canvas.getContext) {
+		var context = canvas.getContext('2d');
+		// Erase canvas
+		context.canvas.height = context.canvas.height;
+	}
+
 }
