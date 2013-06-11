@@ -10,8 +10,13 @@ var HOTSPOT_SIZE = 100;
 // standard object id, maybe dynamic later
 var OBJECT_ID = 10;
 
+// the currently handled video
+var current_video_url = "res/quergelesen.m4v";
+
 // the object that is currently worked on
 var current_trackobject_index = 0;
+
+var current_demo = 1;
 
 var trackobjects = [];
 
@@ -79,8 +84,11 @@ $(document).ready(function() {
 		mouseX = event.pageX;
 		mouseY = event.pageY;
 	};
-	console.log("calling restore_xml()");
-	restore_xml();
+
+	$("#demo1 a").click(function(){change_demo(1);});
+	$("#demo2 a").click(function(){change_demo(2);});
+	$("#demo3 a").click(function(){change_demo(3);});
+	
 	$("#object_data #object_name").change(function(){
 		trackobjects[current_trackobject_index].title = $("#object_data #object_name").val();
 		update_ui();
@@ -102,6 +110,17 @@ $(document).ready(function() {
 		update_ui();
 	});
 	
+	$("#source_video_url").change(function(){
+		set_current_video($("#source_video_url").val());
+		update_ui();
+	});	
+	
+	init_video();
+});
+
+function init_video(){
+	console.log("calling restore_xml()");
+	restore_xml();	
 	
 	// create popcorn instance
 	pop = Popcorn("#video", {
@@ -119,8 +138,7 @@ $(document).ready(function() {
 		this.destroy();
 		prepare_trackpoints(duration);
 	});
-
-});
+}
 
 function update_ui(){
 	var object = trackobjects[current_trackobject_index];
@@ -129,6 +147,7 @@ function update_ui(){
 	$("#object_data #object_description").val(object.description);
 	$("#object_data #object_link").val(object.link);
 	$("#object_data #object_image").val(object.thumb);
+	$("#source_video_url").val(current_video_url);
 	
 	$("#object_list").empty().append('<li class="nav-header">Traced Objects</li>');
 	
@@ -138,7 +157,12 @@ function update_ui(){
 		else $("#object_list").append('<li><a onclick="select_object('+object_index+');" href="#">'+value.title+'</a></li>');		
 	});
 	
-	$("#object_list").append('<li class="divider"></li><li><a onclick="add_object();" href="#">add a new object</a></li>');
+	$("#object_list").append('<li class="divider"></li><li><a onclick="add_object();" href="#"><i class="icon-plus"></i> add a new object</a></li>');
+}
+
+function set_current_video(video_url){
+	current_video_url = video_url;
+	$("#video").attr("src",video_url);
 }
 
 function select_object(object_index){
@@ -166,6 +190,14 @@ function remove_tracking_data(){
 	trackobjects[current_trackobject_index].trackpoints = [];
 	clear_canvas();
 	update_ui();
+}
+
+function change_demo(number){
+	current_demo = number;
+	$("#demolist li").removeClass("active");
+	$("#demolist li").eq(current_demo-1).addClass("active");
+	init_video();
+	
 }
 
 function prepare_trackpoints(media_duration) {
@@ -217,7 +249,7 @@ function create_trackpoint(options) {
 
 function save_xml() {
 	console.log("print_xml called");
-	var output_xml = '<?xml version="1.0" encoding="utf-8"?><nle_data><links>';
+	var output_xml = '<?xml version="1.0" encoding="utf-8"?><nle_data url="'+current_video_url+'"><links>';
 	$.each(trackobjects, function(object_index, value) {
 		output_xml = output_xml + value.toXML(object_index);
 	});
@@ -231,7 +263,7 @@ function save_xml() {
 	});
 	output_xml = output_xml + '</frames></nle_data>';
 	//console.log(output_xml);
-	$.post("create_xml_file.php",{data: output_xml},function(data){
+	$.post("create_xml_file.php",{filename: 'tracedata'+current_demo+'.xml', data: output_xml},function(data){
 		console.log("Data was saved successfully");
 	});
 }
@@ -240,7 +272,7 @@ function restore_xml() {
 	console.log("started restore_xml()");
 	trackobjects = [];
 	current_trackobject_index = 0;
-	$.get('tmp/tracedata.xml', function(data) {
+	$.get('tmp/tracedata'+current_demo+'.xml', function(data) {
 		console.log(data);
 		console.log("Restoring XML.");
 		parseXML(data);
@@ -257,6 +289,8 @@ function parseXML(xml) {
 	console.log("parseXML");
 	// var count = 3;
 
+	set_current_video($(xml).find('nle_data').first().attr('url'));
+	
 	$(xml).find('links > link').each(
 			function() {
 				console.log("link gefunden:" + $(this).attr('dest'));

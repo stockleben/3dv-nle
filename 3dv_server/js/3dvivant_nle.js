@@ -6,6 +6,8 @@ var box;
 var dragging_box;
 box = null;
 
+var current_demo = 1;
+
 $(document)
 .ready(
 		function() {
@@ -58,19 +60,6 @@ $(document)
 						}
 					});
 
-			// create popcorn instance
-			pop = Popcorn("#video", {
-				frameAnimation : true,
-				frameRate : FRAMERATE
-			});
-			// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
-			links = {};
-			// var $frames = new Object();
-
-			$.get('tmp/tracedata.xml', function(data) {
-				parseFrames(data);
-			});
-
 			$("#canvas_div").mousedown(function(e) {
 				if (box !== null) {
 					var video_offset = $("#video").offset();
@@ -92,7 +81,12 @@ $(document)
 					}
 				}
 			});
-
+			
+			$("#demo1 a").click(function(){change_demo(1);});
+			$("#demo2 a").click(function(){change_demo(2);});
+			$("#demo3 a").click(function(){change_demo(3);});
+			
+			init_video();
 			console.log("page ready.");
 		});
 
@@ -152,10 +146,38 @@ function BoxObject(x1, y1, x2, y2, link, link_id, title, author, thumb) {
 	}
 }
 
+function change_demo(number){
+	current_demo = number;
+	$("#demolist li").removeClass("active");
+	$("#demolist li").eq(current_demo-1).addClass("active");
+	init_video();
+}
+
+function set_current_video(video_url){
+	current_video_url = video_url;
+	$("#video").attr("src",video_url);
+}
+
+function init_video(){
+	// create popcorn instance
+	pop = Popcorn("#video", {
+		frameAnimation : true,
+		frameRate : FRAMERATE
+	});
+	// var pop = Popcorn( "#video", { frameRate: FRAMERATE } );
+	links = {};
+	// var $frames = new Object();
+
+	$.get('tmp/tracedata'+current_demo+'.xml', function(data) {
+		parseFrames(data);
+	});
+}
+
 function parseFrames(xml) {
 	console.log("parseFrames");
 	// var count = 3;
-
+	set_current_video($(xml).find('nle_data').first().attr('url'));
+	
 	$(xml).find('links > link').each(
 			function() {
 				console.log("link gefunden:" + $(this).attr('dest'));

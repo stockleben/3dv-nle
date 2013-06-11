@@ -8,9 +8,11 @@ if (get_magic_quotes_gpc()){
 } else {
 	$data = $_POST['data'];
 }
+
+$filename = 'tmp/'.$_POST['filename'];
 //$xml = new SimpleXMLElement($data);
 //$xml->asXML();
 
-file_put_contents(STANDARD_FILENAME,$data);
+file_put_contents($filename,$data);
 
 ?>
