@@ -320,8 +320,8 @@ function parseXML(xml) {
 							var object_id = $BoundingBox.attr('id');
 							var trackpoints = trackobjects[object_id].trackpoints;
 							// revert box calculations
-							var x = $BoundingBox.find("Min").attr("X")+HOTSPOT_SIZE;
-							var y = $BoundingBox.find("Min").attr("Y")+HOTSPOT_SIZE;
+							var x = parseInt($BoundingBox.find("Min").attr("X"))+HOTSPOT_SIZE;
+							var y = parseInt($BoundingBox.find("Min").attr("Y"))+HOTSPOT_SIZE;
 							var tp = new TrackPoint(x, y, frame_index);
 							trackpoints.push(tp);
 					}// end else

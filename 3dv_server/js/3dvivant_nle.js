@@ -24,7 +24,7 @@ $(document)
 							left : 0
 						},
 						helper : function(event) {
-							return $('<div class="bookentry"><img width="60" src="'
+							return $('<div class="btn"><img width="60" src="'
 									+ dragging_box.thumb
 									+ '"/><p>'+dragging_box.author+'</p>'
 									+ '<a href="'
@@ -47,7 +47,7 @@ $(document)
 								console.log("already there ...");
 							} else {
 								$(this).append(
-										'<div class="bookentry"><img width="60" src="' +
+										'<div class="btn"><img width="60" src="' +
 										dragging_box.thumb +
 										'"/><p>'+dragging_box.author+'</p>' +
 										'<a href="' +
@@ -265,7 +265,7 @@ function parseFrames(xml) {
 							$('#current_item').empty();
 
 							$('#current_item').append(
-									'<div class="bookentry" id="' + box.link_id
+									'<div class="btn" id="' + box.link_id
 									+ '"><img width="60" src="'
 									+ box.thumb + '"/><a href="'
 									+ box.link + '" target="_blank">'
