@@ -194,6 +194,7 @@ function remove_tracking_data(){
 
 function change_demo(number){
 	current_demo = number;
+	$("#view_source").attr("href","tmp/tracedata"+number+".xml");
 	$("#demolist li").removeClass("active");
 	$("#demolist li").eq(current_demo-1).addClass("active");
 	init_video();

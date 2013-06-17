@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<nle_data>
+<nle_data url="res/quergelesen.m4v">
 	<links>
 		<link object="1" dest="http://www.rbb-online.de/quergelesen/querarchiv/bibliothek/die_underdocks___verschwoerung.html">
 			<title>Die UnderDocks - Verschwörung in der Hafencity</title>
 			<author>Andreas Schlüter</author>
 			<image>res/img/die_underdocks_verschwoerung.file.jpg</image>
+			<description>description</description>
 		</link>
 		<link object="2" dest="http://www.rbb-online.de/quergelesen/querarchiv/bibliothek/verloren_in_der_wildnis.html">
 			<title>Verloren in der Wildnis</title>
 			<author>Bobbie Pyron</author>
 			<image>res/img/verloren_in_der_wildnis.file.jpg</image>
+			<description>description</description>
 		</link>
 		<link object="3" dest="http://www.rbb-online.de/quergelesen/querarchiv/bibliothek/die_geheimnisse_von.html">
 			<title>Die Geheimnisse von Harris Burdick</title>
 			<author>Chris Van Allsburg</author>
 			<image>res/img/die_geheimnisse_von.file.jpg</image>
+			<description>description</description>
 		</link>
 	</links>
 	<frames>

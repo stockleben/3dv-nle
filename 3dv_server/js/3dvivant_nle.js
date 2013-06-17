@@ -85,6 +85,7 @@ $(document)
 			$("#demo1 a").click(function(){change_demo(1);});
 			$("#demo2 a").click(function(){change_demo(2);});
 			$("#demo3 a").click(function(){change_demo(3);});
+			$("#demo4 a").click(function(){change_demo(4);});
 			
 			init_video();
 			console.log("page ready.");
